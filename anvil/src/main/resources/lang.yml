@@ -1,0 +1,5 @@
+NO_PERMISSION: "Unknown command. Type \"help\" for help."
+ON_CONSOLE_EXECUTE: "This command cannot be executed from the console!"
+RELOAD_MESSAGES: "&aMessages have been reloaded successfully"
+TITLE: "&4Repair & Name"
+TOO_EXPENSIVE: "&cYou need {0} levels to do this!"

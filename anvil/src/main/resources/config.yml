@@ -1,0 +1,13 @@
+# Anvil blocks will not break - permission: anvil.unbreakable
+unbreakable anvils: true
+
+# Players can use colours in anvils - permission: anvil.colour
+anvil colours: true
+
+# change the "too expensive" limit. minecraft default = 40 levels, Set to -1 to disable the limit.
+maximum repair cost: -1
+
+# change whether an item being renamed always costs 1 level. Set to -1 to use default minecraft mechanics
+renaming cost: 1
+
+debug: true
