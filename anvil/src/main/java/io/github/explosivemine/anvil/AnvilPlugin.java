@@ -7,7 +7,6 @@ import io.github.explosivemine.anvil.player.SPlayerManager;
 import io.github.explosivemine.anvil.config.ConfigSettings;
 import io.github.explosivemine.anvil.listeners.AnvilEvents;
 import io.github.explosivemine.anvil.listeners.PlayerEvents;
-import io.github.explosivemine.anvil.utils.UpdateChecker;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.Command;
@@ -41,6 +40,11 @@ public final class AnvilPlugin extends JavaPlugin implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission("anvil.admin")) {
+                Lang.NO_PERMISSION.send(sender);
+                return false;
+            }
+
             Lang.reload(this);
             Lang.RELOAD_MESSAGES.send(sender);
             return false;
