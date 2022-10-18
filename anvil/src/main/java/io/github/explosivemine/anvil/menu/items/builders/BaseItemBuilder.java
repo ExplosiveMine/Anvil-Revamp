@@ -40,7 +40,7 @@ public abstract class BaseItemBuilder<Builder extends BaseItemBuilder<Builder>> 
 
 
     public Builder setLore(String...lore) {
-        meta.setLore(Arrays.stream(lore).map(s -> StringUtils.colour(s)).collect(Collectors.toList()));
+        meta.setLore(Arrays.stream(lore).map(StringUtils::colour).collect(Collectors.toList()));
         return (Builder) this;
     }
 

@@ -35,11 +35,12 @@ public final class PlayerEvents extends EventListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (event.getPlayer().isOp()) {
+        Player player = event.getPlayer();
+        if (player.isOp()) {
             new UpdateChecker(plugin, 77142).getVersion(s -> {
-                if (s.compareTo(plugin.getDescription().getVersion()) > 0) {
-                    Lang.CUSTOM.send(event.getPlayer(), "&c&l[Anvil] &cWe have a new update: " + s);
-                    Lang.CUSTOM.send(event.getPlayer(), "&cPlease download it here:" + plugin.getDescription().getWebsite());
+                if (s.compareTo("v" + plugin.getDescription().getVersion()) > 0) {
+                    Lang.CUSTOM.send(player, "&3&l[Anvil] &bWe have a new update: " + s + ", you are running v" + plugin.getDescription().getVersion());
+                    Lang.CUSTOM.send(player, "&bDownload it here: " + plugin.getDescription().getWebsite());
                 }
             });
         }
