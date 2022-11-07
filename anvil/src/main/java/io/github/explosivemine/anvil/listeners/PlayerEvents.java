@@ -3,7 +3,6 @@ package io.github.explosivemine.anvil.listeners;
 import io.github.explosivemine.anvil.AnvilPlugin;
 import io.github.explosivemine.anvil.config.parser.Lang;
 import io.github.explosivemine.anvil.menu.MenuIdentifier;
-import io.github.explosivemine.anvil.utils.Logging;
 import io.github.explosivemine.anvil.utils.UpdateChecker;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
