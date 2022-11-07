@@ -3,6 +3,7 @@ package io.github.explosivemine.anvil.listeners;
 import io.github.explosivemine.anvil.AnvilPlugin;
 import io.github.explosivemine.anvil.config.parser.Lang;
 import io.github.explosivemine.anvil.menu.MenuIdentifier;
+import io.github.explosivemine.anvil.utils.Logging;
 import io.github.explosivemine.anvil.utils.UpdateChecker;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,7 +31,8 @@ public final class PlayerEvents extends EventListener {
         if (!event.getPlayer().hasPermission("anvil.unbreakable"))
             return;
 
-        plugin.getMenuManager().open(MenuIdentifier.ANVIL, player);
+        event.setCancelled(true);
+        plugin.getMenuManager().open(MenuIdentifier.ANVIL, plugin.getSPlayerManager().get(player), player);
     }
 
     @EventHandler(ignoreCancelled = true)

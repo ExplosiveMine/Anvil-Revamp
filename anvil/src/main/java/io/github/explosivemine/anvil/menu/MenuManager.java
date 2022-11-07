@@ -5,9 +5,7 @@ import io.github.explosivemine.anvil.menu.impl.Anvil;
 import io.github.explosivemine.anvil.menu.type.Menu;
 import io.github.explosivemine.anvil.player.SPlayer;
 import lombok.Getter;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -18,8 +16,6 @@ public final class MenuManager {
     private final Map<MenuIdentifier, Menu> menus = new HashMap<>();
 
     private final Map<InventoryHolder, MenuIdentifier> entityMenus = new HashMap<>();
-
-    //custom menu stuff
 
     // players which have instaBuild enabled
     @Getter private final Set<UUID> instaBuild = new HashSet<>();
@@ -48,20 +44,16 @@ public final class MenuManager {
         getMenu(menuIdentifier).open(sPlayer);
     }
 
-    public <T extends InventoryHolder> void open(MenuIdentifier menuIdentifier, SPlayer sPlayer, T holder) {
+    public void open(MenuIdentifier menuIdentifier, SPlayer sPlayer, InventoryHolder holder) {
         entityMenus.put(holder, menuIdentifier);
         getMenu(menuIdentifier).open(sPlayer, holder);
     }
 
-    public <T extends InventoryHolder> void open(MenuIdentifier menuIdentifier, Player player) {
-        open(menuIdentifier, plugin.getSPlayerManager().get(player));
+    public @Nullable Menu getMenu(InventoryHolder holder) {
+        return getMenu(entityMenus.get(holder));
     }
 
-    public @Nullable <T extends InventoryHolder> Menu getMenu(T holder) {
-        return menus.get(entityMenus.get(holder));
-    }
-
-    public @NotNull Menu getMenu(MenuIdentifier identifier) {
+    public Menu getMenu(MenuIdentifier identifier) {
         if (menus.isEmpty())
             loadMenus();
 
