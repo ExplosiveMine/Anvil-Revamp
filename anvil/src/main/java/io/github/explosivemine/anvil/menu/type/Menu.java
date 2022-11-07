@@ -125,7 +125,11 @@ public abstract class Menu implements InventoryHolder {
         if (reopenInventory)
             Executor.sync(plugin, runnable -> sPlayer.openInventory(event.getInventory()), 1L);
         else
-            plugin.getMenuManager().close(event.getInventory().getHolder());
+            plugin.getMenuManager().close(getHolder(sPlayer));
+    }
+
+    public InventoryHolder getHolder(SPlayer sPlayer) {
+        return this;
     }
 
     public void setItem(int slot, BaseItemBuilder<?> builder) {

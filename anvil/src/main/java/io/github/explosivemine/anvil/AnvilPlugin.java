@@ -60,7 +60,7 @@ public final class AnvilPlugin extends JavaPlugin implements CommandExecutor {
             return false;
         }
 
-        menuManager.open(MenuIdentifier.ANVIL, player);
+        menuManager.open(MenuIdentifier.ANVIL, sPlayerManager.get(player), player);
         return false;
     }
 

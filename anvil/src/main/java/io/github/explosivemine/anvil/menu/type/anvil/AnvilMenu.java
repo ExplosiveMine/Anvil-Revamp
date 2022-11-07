@@ -41,4 +41,9 @@ public abstract class AnvilMenu extends Menu {
         build(sPlayer, inventoryHolder);
     }
 
+    @Override
+    public InventoryHolder getHolder(SPlayer sPlayer) {
+        return sPlayer.isOffline() ? this : sPlayer.toOfflinePlayer().getPlayer();
+    }
+
 }

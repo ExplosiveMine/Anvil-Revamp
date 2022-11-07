@@ -3,6 +3,7 @@ package io.github.explosivemine.anvil.listeners;
 import io.github.explosivemine.anvil.AnvilPlugin;
 import io.github.explosivemine.anvil.config.parser.Lang;
 import io.github.explosivemine.anvil.menu.items.builders.ItemBuilder;
+import io.github.explosivemine.anvil.menu.type.Menu;
 import io.github.explosivemine.anvil.menu.type.anvil.VersionMatcher;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -28,6 +29,10 @@ public final class AnvilEvents extends EventListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
+        Menu menu = plugin.getMenuManager().getMenu(event.getView().getPlayer());
+        if (menu == null)
+            return;
+
         Set<UUID> instaBuild = plugin.getMenuManager().getInstaBuild();
 
         Player player = (Player) event.getView().getPlayer();
@@ -38,7 +43,7 @@ public final class AnvilEvents extends EventListener {
         AnvilInventory inv = event.getInventory();
         boolean slot1HasItem = isItemPresent(inv, 1);
         boolean onlyRename = isItemPresent(inv, 0)
-                && !inv.getRenameText().equals(inv.getItem(0).getItemMeta().getDisplayName())
+                && !inv.getItem(0).getItemMeta().getDisplayName().equals(inv.getRenameText())
                 && !slot1HasItem && isItemPresent(inv, 2);
 
         // handle renaming costs
