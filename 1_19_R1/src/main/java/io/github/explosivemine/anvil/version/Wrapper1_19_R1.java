@@ -10,7 +10,7 @@ import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public final class Wrapper1_19_R1 implements VersionWrapper{
+public final class Wrapper1_19_R1 implements VersionWrapper {
     @Override
     public Inventory openInventory(Player player) {
         Block block = Blocks.ANVIL;
