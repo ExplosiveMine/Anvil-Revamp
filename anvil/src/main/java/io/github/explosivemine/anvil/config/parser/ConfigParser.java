@@ -11,6 +11,7 @@ public final class ConfigParser extends SectionParser {
     @Getter private boolean changeRenameCost = false;
     @Getter private boolean unbreakable;
     @Getter private boolean colours;
+    @Getter private boolean virtual;
     @Getter private boolean debug;
 
     public ConfigParser(AnvilPlugin plugin) {
@@ -23,6 +24,7 @@ public final class ConfigParser extends SectionParser {
 
         unbreakable = config.getBoolean("unbreakable anvils", false);
         colours = config.getBoolean("anvil colours", false);
+        virtual = config.getBoolean("virtual anvils", true);
 
         costLimit = config.getInt("maximum repair cost", 40);
         if (costLimit == -1)

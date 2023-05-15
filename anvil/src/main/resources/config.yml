@@ -10,4 +10,7 @@ maximum repair cost: -1
 # change whether an item being renamed always costs 1 level. Set to -1 to use default minecraft mechanics
 renaming cost: 1
 
+# Right-clicking an anvil in the main hand opens the anvil gui - permission: anvil.virtual
+virtual anvils: true
+
 debug: true
