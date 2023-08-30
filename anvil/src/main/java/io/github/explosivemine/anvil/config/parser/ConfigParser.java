@@ -31,8 +31,7 @@ public final class ConfigParser extends SectionParser {
             costLimit = Integer.MAX_VALUE;
 
         renameCost = config.getInt("renaming cost", -1);
-        if (renameCost != -1)
-            changeRenameCost = true;
+        changeRenameCost = renameCost != -1;
 
         debug = config.getBoolean("debug", false);
     }

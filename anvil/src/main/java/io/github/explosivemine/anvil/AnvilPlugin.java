@@ -1,6 +1,7 @@
 package io.github.explosivemine.anvil;
 
 import io.github.explosivemine.anvil.config.parser.Lang;
+import io.github.explosivemine.anvil.listeners.ServerEvents;
 import io.github.explosivemine.anvil.menu.MenuIdentifier;
 import io.github.explosivemine.anvil.menu.MenuManager;
 import io.github.explosivemine.anvil.player.SPlayerManager;
@@ -24,15 +25,29 @@ public final class AnvilPlugin extends JavaPlugin implements CommandExecutor {
 
     @Getter private final MenuManager menuManager = new MenuManager(this);
 
+    //todo fix bug when player has the xp yet its very large the xp cost is displayed as very small
+    // anvil.getRepairCost returns large number...xp taken from player is also large so its fine
+    // only problem is the display like why? idkl
+    // for the above bug:
+    // Note that AnvilInventory#setRepairCost also does not notify the client that the cost has changed.
+    // This is a Spigot issue that can be worked around by using a sync task to modify it after the event
+    // has completed but before the client is actually informed.
+    // There's no guarantee that this will continue to work in future versions, it's pretty hacky.
+
+    // bug: when player has enough xp, a packet with instaBuild set to true is sent. so they
+    // can combine any enchantments regardless of compatibility with ITEM (not other enchant books that one works fine.)
+
+    // bug: when player does not have enough xp, incompatible enchantment with ITEM still send an xp requirement but its 1 level
+    // also the too expensive is gone.
     @Override
     public void onEnable() {
-        // Plugin startup logic
         configSettings.init();
 
         getCommand("anvil").setExecutor(this);
 
         new PlayerEvents(this);
         new AnvilEvents(this);
+        new ServerEvents(this);
 
         new Metrics(this, 11598);
     }

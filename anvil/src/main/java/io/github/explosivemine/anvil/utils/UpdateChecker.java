@@ -19,15 +19,23 @@ public final class UpdateChecker {
         this.resourceId = resourceId;
     }
 
-    public void getVersion(Consumer<String> consumer) {
+    /**
+     * @param action provides the latest plugin version. It is only run if the plugin is out of date.
+     */
+    public void checkVersion(Consumer<String> action) {
         Executor.async(plugin, runnable -> {
             try {
                 InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId).openStream();
                 Scanner scanner = new Scanner(inputStream);
-                if (scanner.hasNext())
-                    consumer.accept(scanner.next());
+                if (scanner.hasNext()) {
+                    String s = scanner.next();
+                    if (s.replaceAll("v", "").compareTo(plugin.getDescription().getVersion()) > 0)
+                        action.accept(s);
+                } else {
+                    Logging.debug(plugin, "Could not check plugin's version!");
+                }
             } catch (IOException exception) {
-                plugin.getLogger().info("Unable to check for updates: " + exception.getMessage());
+                exception.printStackTrace();
             }
         });
     }

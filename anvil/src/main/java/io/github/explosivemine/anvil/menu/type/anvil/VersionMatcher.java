@@ -18,6 +18,8 @@ public final class VersionMatcher {
         put("1.19.2-R0.1-SNAPSHOT", "Wrapper1_19_1_R1");
         put("1.19.3-R0.1-SNAPSHOT", "Wrapper1_19_R2");
         put("1.19.4-R0.1-SNAPSHOT", "Wrapper1_19_R3");
+        put("1.20-R0.1-SNAPSHOT", "Wrapper1_20_R1");
+        put("1.20.1-R0.1-SNAPSHOT", "Wrapper1_20_R1");
     }};
 
     public VersionWrapper match() {
@@ -26,7 +28,7 @@ public final class VersionMatcher {
             return (VersionWrapper) Class.forName("io.github.explosivemine.anvil.version." + map.get(bukkitVersion))
                     .getDeclaredConstructor()
                     .newInstance();
-        } catch (ReflectiveOperationException exception) {
+        } catch (Exception exception) {
             throw new IllegalStateException("Failed to instantiate version wrapper for version " + bukkitVersion, exception);
         }
     }

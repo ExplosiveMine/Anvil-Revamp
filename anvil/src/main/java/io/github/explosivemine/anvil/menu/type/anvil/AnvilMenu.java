@@ -5,6 +5,7 @@ import io.github.explosivemine.anvil.menu.MenuIdentifier;
 import io.github.explosivemine.anvil.menu.items.builders.ItemBuilder;
 import io.github.explosivemine.anvil.menu.type.Menu;
 import io.github.explosivemine.anvil.player.SPlayer;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
@@ -28,8 +29,17 @@ public abstract class AnvilMenu extends Menu {
                     if (!(event.getClickedInventory() instanceof AnvilInventory inv))
                         return;
 
-                    if (plugin.getMenuManager().getInstaBuild().contains(sPlayer.getUuid()))
-                        sPlayer.runIfOnline(player -> player.setLevel(player.getLevel() - inv.getRepairCost()));
+                    if (plugin.getMenuManager().getInstaBuild().contains(sPlayer.getUuid())) {
+                        sPlayer.runIfOnline(player -> {
+                            if (player.getGameMode() == GameMode.CREATIVE)
+                                return;
+
+                            if (player.getLevel() >= inv.getRepairCost())
+                                player.setLevel(player.getLevel() - inv.getRepairCost());
+                            else
+                                event.setCancelled(true);
+                        });
+                    }
                 }));
     }
 

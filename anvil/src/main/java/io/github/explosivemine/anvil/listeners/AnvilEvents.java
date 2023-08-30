@@ -42,9 +42,8 @@ public final class AnvilEvents extends EventListener {
 
         AnvilInventory inv = event.getInventory();
         boolean slot1HasItem = isItemPresent(inv, 1);
-        boolean onlyRename = isItemPresent(inv, 0)
-                && !inv.getItem(0).getItemMeta().getDisplayName().equals(inv.getRenameText())
-                && !slot1HasItem && isItemPresent(inv, 2);
+        boolean onlyRename = isItemPresent(inv, 0) && !slot1HasItem
+                && !inv.getItem(0).getItemMeta().getDisplayName().equals(inv.getRenameText());
 
         // handle renaming costs
         if (plugin.getConfigSettings().getConfigParser().isChangeRenameCost() && onlyRename) {
@@ -54,7 +53,7 @@ public final class AnvilEvents extends EventListener {
             int cost = inv.getRepairCost();
             if (cost < maxCost) {
                 // leave it as too expensive and send the player a message about what the repair cost would have been
-                if (cost > player.getLevel()) {
+                if (cost > player.getLevel() && player.getGameMode() != GameMode.CREATIVE) {
                     if (slot1HasItem && shouldSendMessage(player.getUniqueId()))
                         Lang.TOO_EXPENSIVE.send(player, cost);
 
@@ -65,6 +64,7 @@ public final class AnvilEvents extends EventListener {
                 // display the green text and set maximum cost
                 if (cost > 39) {
                     inv.setMaximumRepairCost(maxCost);
+                    inv.setRepairCost(cost);
                     instaBuild.add(uuid);
                     new VersionMatcher().match().setInstaBuild(player, true);
                 }

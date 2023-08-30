@@ -18,7 +18,18 @@ public enum Lang {
     RELOAD_MESSAGES,
     TITLE,
     TOO_EXPENSIVE,
-    CUSTOM;
+    CUSTOM {
+        @Override
+        public void send(CommandSender sender, Object... objects) {
+            if (objects.length > 0)
+                sender.sendMessage(StringUtils.replaceArgs("{0}", objects));
+        }
+
+        @Override
+        public String get(Object... objects) {
+            return StringUtils.colour(StringUtils.replaceArgs("{0}", objects));
+        }
+    };
 
     private static YamlConfiguration langCfg;
 

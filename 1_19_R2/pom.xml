@@ -7,7 +7,7 @@
     <parent>
         <artifactId>Anvil-Revamp</artifactId>
         <groupId>io.github.explosivemine</groupId>
-        <version>1.4.0</version>
+        <version>1.4.2</version>
     </parent>
 
     <artifactId>1_19_R2</artifactId>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>io.github.explosivemine</groupId>
             <artifactId>abstraction</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
