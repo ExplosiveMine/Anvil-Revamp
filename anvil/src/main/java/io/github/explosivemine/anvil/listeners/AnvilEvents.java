@@ -19,7 +19,6 @@ import java.util.UUID;
 public final class AnvilEvents extends EventListener {
     // prepare anvil event cooldown
     private final HashMap<UUID, Long> players = new HashMap<>();
-
     private final int maxCost;
 
     public AnvilEvents(AnvilPlugin plugin) {
@@ -56,7 +55,6 @@ public final class AnvilEvents extends EventListener {
                 if (cost > player.getLevel() && player.getGameMode() != GameMode.CREATIVE) {
                     if (slot1HasItem && shouldSendMessage(player.getUniqueId()))
                         Lang.TOO_EXPENSIVE.send(player, cost);
-
                     return;
                 }
 

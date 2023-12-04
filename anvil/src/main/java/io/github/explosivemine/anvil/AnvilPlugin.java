@@ -33,12 +33,13 @@ public final class AnvilPlugin extends JavaPlugin implements CommandExecutor {
     // This is a Spigot issue that can be worked around by using a sync task to modify it after the event
     // has completed but before the client is actually informed.
     // There's no guarantee that this will continue to work in future versions, it's pretty hacky.
+    //
+    // ^^^^ could not replicate yet
 
-    // bug: when player has enough xp, a packet with instaBuild set to true is sent. so they
-    // can combine any enchantments regardless of compatibility with ITEM (not other enchant books that one works fine.)
+    //todo: make custom anvil result resolver
 
-    // bug: when player does not have enough xp, incompatible enchantment with ITEM still send an xp requirement but its 1 level
-    // also the too expensive is gone.
+    //todo: prevent players from renaming as a feature
+
     @Override
     public void onEnable() {
         configSettings.init();
