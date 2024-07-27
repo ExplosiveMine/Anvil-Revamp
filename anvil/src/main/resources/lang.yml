@@ -1,5 +1,14 @@
-NO_PERMISSION: "Unknown command. Type \"help\" for help."
-ON_CONSOLE_EXECUTE: "This command cannot be executed from the console!"
+COMMAND_COOLDOWN: "&cThis command will be available again in {0}"
+COMMAND_USAGE: "&bUsage: &7/{0}"
+CONSOLE_NO_PERM: "This command cannot be executed from the console!"
+HELP_ANVIL_COMMAND_DESCRIPTION: "&b/anvil &f- &7Opens the anvil menu"
+HELP_FOOTER: "&b&lAnvil - &7Made with <3 by explosivemines"
+HELP_HEADER: "&b&lAnvil &7Commands List [{0}/{1}]:"
+HELP_LINE: '&b/{0} &f- &7{1}'
+HELP_NEXT_PAGE: '&b&lAnvil &7Use /anvil help {0} for the next page.'
+INVALID_NUMBER: "&cInvalid number '{0}'."
+INVALID_PLAYER: "&cWe could not find the mentioned player!"
+PLAYER_NO_PERM: "Unknown command. Type \"help\" for help."
 RELOAD_MESSAGES: "&aMessages have been reloaded successfully"
 TITLE: "&4Repair & Name"
 TOO_EXPENSIVE: "&cYou need {0} levels to do this!"

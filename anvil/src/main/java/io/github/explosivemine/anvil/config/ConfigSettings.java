@@ -21,12 +21,13 @@ public final class ConfigSettings {
 
         configParser = new ConfigParser(plugin);
 
-        SectionParser[] parsers = new SectionParser[] {
+        SectionParser<?>[] parsers = new SectionParser[] {
                 configParser
         };
 
-        for (SectionParser parser : parsers)
+        for (SectionParser<?> parser : parsers) {
             parser.parse();
+        }
     }
 
 }

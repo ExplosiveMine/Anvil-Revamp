@@ -13,7 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public abstract class AnvilMenu extends Menu {
-    public AnvilMenu(AnvilPlugin plugin, MenuIdentifier identifier, String title) {
+    protected AnvilMenu(AnvilPlugin plugin, MenuIdentifier identifier, String title) {
         super(plugin, identifier, title, InventoryType.ANVIL);
     }
 
@@ -29,7 +29,7 @@ public abstract class AnvilMenu extends Menu {
                     if (!(event.getClickedInventory() instanceof AnvilInventory inv))
                         return;
 
-                    if (plugin.getMenuManager().getInstaBuild().contains(sPlayer.getUuid())) {
+                    if (getPlugin().getMenuManager().getInstaBuild().contains(sPlayer.getUuid())) {
                         sPlayer.runIfOnline(player -> {
                             if (player.getGameMode() == GameMode.CREATIVE)
                                 return;

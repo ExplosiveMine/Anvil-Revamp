@@ -13,7 +13,7 @@ import java.util.*;
 public final class MenuManager {
     private final AnvilPlugin plugin;
 
-    private final Map<MenuIdentifier, Menu> menus = new HashMap<>();
+    private final Map<MenuIdentifier, Menu> menus = new EnumMap<>(MenuIdentifier.class);
 
     private final Map<InventoryHolder, MenuIdentifier> entityMenus = new HashMap<>();
 

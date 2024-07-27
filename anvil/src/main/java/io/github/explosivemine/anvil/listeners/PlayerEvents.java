@@ -1,6 +1,8 @@
 package io.github.explosivemine.anvil.listeners;
 
 import io.github.explosivemine.anvil.AnvilPlugin;
+import io.github.explosivemine.anvil.Permissions;
+import io.github.explosivemine.anvil.config.parser.ConfigParser;
 import io.github.explosivemine.anvil.menu.MenuIdentifier;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,20 +22,21 @@ public final class PlayerEvents extends EventListener {
         Player player = event.getPlayer();
 
         Material mat = player.getInventory().getItemInMainHand().getType();
-        if (plugin.getConfigSettings().getConfigParser().isVirtual()
+        ConfigParser configParser = getPlugin().getConfigSettings().getConfigParser();
+        if (configParser.isVirtual()
                 && action == Action.RIGHT_CLICK_AIR
                 && (mat == Material.ANVIL || mat == Material.CHIPPED_ANVIL || mat == Material.DAMAGED_ANVIL)
-                && player.hasPermission("anvil.virtual")) {
-            plugin.getMenuManager().open(MenuIdentifier.ANVIL, plugin.getSPlayerManager().get(player), player);
+                && Permissions.VIRTUAL.hasPermission(player)) {
+            getPlugin().getMenuManager().open(MenuIdentifier.ANVIL, getPlugin().getSPlayerManager().get(player), player);
         }
 
-        if (plugin.getConfigSettings().getConfigParser().isUnbreakable()
+        if (configParser.isUnbreakable()
                 && action == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null
                 && event.getClickedBlock().getType().toString().contains("ANVIL")
-                && player.hasPermission("anvil.unbreakable")
+                && Permissions.UNBREAKABLE.hasPermission(player)
                 && event.useInteractedBlock() != Event.Result.DENY) {
             event.setCancelled(true);
-            plugin.getMenuManager().open(MenuIdentifier.ANVIL, plugin.getSPlayerManager().get(player), player);
+            getPlugin().getMenuManager().open(MenuIdentifier.ANVIL, getPlugin().getSPlayerManager().get(player), player);
         }
     }
 }

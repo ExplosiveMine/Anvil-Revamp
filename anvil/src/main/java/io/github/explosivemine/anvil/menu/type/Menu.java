@@ -6,7 +6,6 @@ import io.github.explosivemine.anvil.menu.MenuIdentifier;
 import io.github.explosivemine.anvil.menu.items.builders.BaseItemBuilder;
 import io.github.explosivemine.anvil.player.SPlayer;
 import io.github.explosivemine.anvil.utils.Executor;
-import io.github.explosivemine.anvil.utils.StringUtils;
 import io.github.explosivemine.anvil.menu.items.MenuItem;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,33 +22,35 @@ import java.util.Map;
 import java.util.function.Function;
 
 public abstract class Menu implements InventoryHolder {
-    protected final AnvilPlugin plugin;
+    @Getter private final AnvilPlugin plugin;
 
-    @Getter protected final MenuIdentifier identifier;
+    @Getter private final MenuIdentifier identifier;
 
-    protected final String title;
-    protected Function<SPlayer, String> titleProvider;
+    @Getter private final String title;
+    @Getter @Setter private Function<SPlayer, String> titleProvider;
 
-    @Getter protected final InventoryType type;
+    @Getter private final InventoryType type;
 
-    @Getter protected final int size;
+    @Getter private final int size;
 
-    @Getter @Setter protected MenuAction<InventoryCloseEvent> closeAction;
+    @Getter @Setter private MenuAction<InventoryCloseEvent> closeAction;
 
-    @Getter @Setter protected BaseItemBuilder<?> filler;
+    @Getter @Setter private BaseItemBuilder<?> filler;
 
-    protected final Map<Integer, MenuItem> defaultItems = new HashMap<>();
-    protected boolean setup = false;
+    private final Map<Integer, MenuItem> defaultItems = new HashMap<>();
+    private boolean setup = false;
 
-    public Menu(AnvilPlugin plugin, MenuIdentifier identifier, String title, InventoryType type) {
+    protected Menu(@NotNull AnvilPlugin plugin, @NotNull MenuIdentifier identifier, @NotNull String title,
+                   @NotNull InventoryType type) {
         this(plugin, identifier, title, type, type.getDefaultSize());
     }
 
-    public Menu(AnvilPlugin plugin, MenuIdentifier identifier, String title, int size) {
+    protected Menu(@NotNull AnvilPlugin plugin, @NotNull MenuIdentifier identifier, @NotNull String title, int size) {
         this(plugin, identifier, title, InventoryType.CHEST, size);
     }
 
-    private Menu(AnvilPlugin plugin, MenuIdentifier identifier, String title, InventoryType type, int size) {
+    private Menu(@NotNull AnvilPlugin plugin, @NotNull MenuIdentifier identifier, @NotNull String title,
+                 @NotNull InventoryType type, int size) {
         this.plugin = plugin;
         this.identifier = identifier;
         this.type = type;
@@ -92,28 +93,16 @@ public abstract class Menu implements InventoryHolder {
     public void populate(Inventory inventory, SPlayer sPlayer) {
         if (getFiller() != null) {
             for (int i = 0; i < size; i++)
-                inventory.setItem(i, getFiller().toItem());
+                inventory.setItem(i, getFiller().getItem());
         }
 
         defaultItems.forEach((key, value) -> inventory.setItem(key, value.getItem(sPlayer)));
     }
 
     protected Inventory createInv(SPlayer sPlayer, InventoryHolder inventoryHolder) {
-        String title = sPlayer == null || titleProvider == null ? getTitle() : titleProvider.apply(sPlayer);
-        return InventoryType.CHEST.equals(type) ? Bukkit.createInventory(inventoryHolder, size, title) : Bukkit.createInventory(inventoryHolder, type, title);
-    }
-
-    protected String getTitle() {
-        return StringUtils.colour(title);
-    }
-
-    public void close(SPlayer sPlayer, boolean openParentMenu) {
-        //todo
-        // impl inventoryHolder
-//        sPlayer.closeInventory();
-//
-//        if (openParentMenu)
-//            plugin.getMenuManager().openParentMenu(sPlayer, identifier);
+        String menuTitle = sPlayer == null || titleProvider == null ? getTitle() : titleProvider.apply(sPlayer);
+        return InventoryType.CHEST.equals(type) ? Bukkit.createInventory(inventoryHolder, size, menuTitle) :
+                Bukkit.createInventory(inventoryHolder, type, menuTitle);
     }
 
     public void onClose(InventoryCloseEvent event, SPlayer sPlayer) {
@@ -128,9 +117,7 @@ public abstract class Menu implements InventoryHolder {
             plugin.getMenuManager().close(getHolder(sPlayer));
     }
 
-    public InventoryHolder getHolder(SPlayer sPlayer) {
-        return this;
-    }
+    public abstract InventoryHolder getHolder(SPlayer sPlayer);
 
     public void setItem(int slot, BaseItemBuilder<?> builder) {
         defaultItems.put(slot, builder.toMenuItem());

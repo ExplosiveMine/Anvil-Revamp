@@ -3,24 +3,33 @@ package io.github.explosivemine.anvil.config.parser;
 import io.github.explosivemine.anvil.AnvilPlugin;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.Nullable;
 
-public final class ConfigParser extends SectionParser {
-    @Getter private int costLimit;
-    @Getter private int renameCost;
+@Getter
+public final class ConfigParser extends SectionParser<Void> {
+    private int costLimit;
+    private int renameCost;
 
-    @Getter private boolean changeRenameCost = false;
-    @Getter private boolean unbreakable;
-    @Getter private boolean colours;
-    @Getter private boolean virtual;
-    @Getter private boolean debug;
+    private boolean changeRenameCost = false;
+    private boolean unbreakable;
+    private boolean colours;
+    private boolean virtual;
+    private boolean debug;
 
     public ConfigParser(AnvilPlugin plugin) {
         super(plugin);
     }
 
+    /**
+     *
+     * @return null
+     */
     @Override
-    public void parse() {
-        ConfigurationSection config = getConfig();
+    public @Nullable Void parse() {
+        ConfigurationSection config = getSection();
+        if (config == null) {
+            return null;
+        }
 
         unbreakable = config.getBoolean("unbreakable anvils", false);
         colours = config.getBoolean("anvil colours", false);
@@ -34,5 +43,7 @@ public final class ConfigParser extends SectionParser {
         changeRenameCost = renameCost != -1;
 
         debug = config.getBoolean("debug", false);
+        return null;
     }
+
 }

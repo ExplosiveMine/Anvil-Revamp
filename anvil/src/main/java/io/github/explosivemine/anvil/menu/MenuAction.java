@@ -9,17 +9,17 @@ import java.util.function.Function;
 public final class MenuAction<T extends InventoryEvent> extends Action<T, Boolean> {
     /**
      *
-     * @param action action accepts an InventoryEvent and the return value is whether the event is cancelled or not if possible
+     * @param function action accepts an InventoryEvent and the return value is whether the event is cancelled or not if possible
      */
-    public MenuAction(Function<T, Boolean> action) {
-        super(action);
+    public MenuAction(Function<T, Boolean> function) {
+        super(function);
     }
 
     @Override
     public Boolean apply(T event) {
         boolean cancel = super.apply(event);
-        if (cancel && event instanceof Cancellable)
-            ((Cancellable) event).setCancelled(true);
+        if (cancel && event instanceof Cancellable cancellable)
+            cancellable.setCancelled(true);
 
         return cancel;
     }

@@ -1,8 +1,8 @@
 package io.github.explosivemine.anvil;
 
-import io.github.explosivemine.anvil.config.parser.Lang;
+import io.github.explosivemine.anvil.commands.anvil.AnvilPluginCommand;
+import io.github.explosivemine.anvil.commands.anvil.AnvilCommandsMap;
 import io.github.explosivemine.anvil.listeners.ServerEvents;
-import io.github.explosivemine.anvil.menu.MenuIdentifier;
 import io.github.explosivemine.anvil.menu.MenuManager;
 import io.github.explosivemine.anvil.player.SPlayerManager;
 import io.github.explosivemine.anvil.config.ConfigSettings;
@@ -10,74 +10,61 @@ import io.github.explosivemine.anvil.listeners.AnvilEvents;
 import io.github.explosivemine.anvil.listeners.PlayerEvents;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.logging.Level;
 
-public final class AnvilPlugin extends JavaPlugin implements CommandExecutor {
-    @Getter private final ConfigSettings configSettings = new ConfigSettings(this);
+@Getter
+public final class AnvilPlugin extends JavaPlugin {
+    private final ConfigSettings configSettings = new ConfigSettings(this);
 
-    @Getter private final SPlayerManager sPlayerManager = new SPlayerManager(this);
+    private final SPlayerManager sPlayerManager = new SPlayerManager(this);
 
-    @Getter private final MenuManager menuManager = new MenuManager(this);
+    private final MenuManager menuManager = new MenuManager(this);
 
-    //todo fix bug when player has the xp yet its very large the xp cost is displayed as very small
-    // anvil.getRepairCost returns large number...xp taken from player is also large so its fine
-    // only problem is the display like why? idkl
-    // for the above bug:
-    // Note that AnvilInventory#setRepairCost also does not notify the client that the cost has changed.
-    // This is a Spigot issue that can be worked around by using a sync task to modify it after the event
-    // has completed but before the client is actually informed.
-    // There's no guarantee that this will continue to work in future versions, it's pretty hacky.
-    //
-    // ^^^^ could not replicate yet
-
-    //todo: make custom anvil result resolver
-
-    //todo: prevent players from renaming as a feature
+    private final AnvilPluginCommand anvilCommand = new AnvilPluginCommand(this, new AnvilCommandsMap(this));
 
     @Override
     public void onEnable() {
         configSettings.init();
 
-        getCommand("anvil").setExecutor(this);
+        org.bukkit.command.PluginCommand cmd = getServer().getPluginCommand(anvilCommand.getIdentifier().getLabel());
+        if (cmd == null) {
+            getLogger().log(Level.WARNING, "Could not register command \"{0}\": command is null",
+                    anvilCommand.getIdentifier().getLabel());
+        } else {
+            cmd.setExecutor(anvilCommand);
+            cmd.setTabCompleter(anvilCommand);
+        }
+        anvilCommand.getCommandsMap().loadDefaultCommands();
 
         new PlayerEvents(this);
         new AnvilEvents(this);
         new ServerEvents(this);
 
-        new Metrics(this, 11598);
-    }
+        Metrics metrics = new Metrics(this, 11598);
+        metrics.addCustomChart(new SimplePie("unbreakable_anvils", () -> {
+            return String.valueOf(configSettings.getConfigParser().isUnbreakable());
+        }));
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            if (!sender.hasPermission("anvil.admin")) {
-                Lang.NO_PERMISSION.send(sender);
-                return false;
-            }
+        metrics.addCustomChart(new SimplePie("anvil_colours", () -> {
+            return String.valueOf(configSettings.getConfigParser().isUnbreakable());
+        }));
 
-            Lang.reload(this);
-            Lang.RELOAD_MESSAGES.send(sender);
-            return false;
-        }
+        metrics.addCustomChart(new SimplePie("maximum_repair_cost", () -> {
+            int costLimit = configSettings.getConfigParser().getCostLimit();
+            return costLimit == Integer.MAX_VALUE ? "Disabled" : String.valueOf(costLimit);
+        }));
 
-        if (!(sender instanceof Player player)) {
-            Lang.ON_CONSOLE_EXECUTE.send(sender);
-            return false;
-        }
+        metrics.addCustomChart(new SimplePie("renaming_cost", () -> {
+            int renameCost = configSettings.getConfigParser().getRenameCost();
+            return renameCost == -1 ? "Disabled" : String.valueOf(renameCost);
+        }));
 
-        if (!player.hasPermission("anvil.use")) {
-            Lang.NO_PERMISSION.send(player);
-            return false;
-        }
-
-        menuManager.open(MenuIdentifier.ANVIL, sPlayerManager.get(player), player);
-        return false;
+        metrics.addCustomChart(new SimplePie("virtual_anvils", () -> {
+            return String.valueOf(configSettings.getConfigParser().isVirtual());
+        }));
     }
 
 }

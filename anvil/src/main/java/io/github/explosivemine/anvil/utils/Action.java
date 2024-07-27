@@ -5,14 +5,14 @@ import org.bukkit.event.Event;
 import java.util.function.Function;
 
 public abstract class Action<T extends Event, R> {
-    protected final Function<T, R> action;
+    private final Function<T, R> function;
 
-    public Action(Function<T, R> action) {
-        this.action = action;
+    protected Action(Function<T, R> function) {
+        this.function = function;
     }
 
     public R apply(T event) {
-        return action.apply(event);
+        return function.apply(event);
     }
 
 }

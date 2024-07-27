@@ -1,48 +1,55 @@
 package io.github.explosivemine.anvil.config.parser;
 
 import io.github.explosivemine.anvil.AnvilPlugin;
-import io.github.explosivemine.anvil.utils.FileUtils;
+import io.github.explosivemine.anvil.config.PluginResourceLoader;
+import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class SectionParser {
-    protected final AnvilPlugin plugin;
+import java.io.File;
 
-    protected final String filePath;
-    protected final String sectionPath;
+public abstract class SectionParser<T> {
+    @Getter private final AnvilPlugin plugin;
+
+    @Getter private final File file;
+
+    @Getter private final String sectionPath;
 
     private ConfigurationSection section;
 
-    public SectionParser(AnvilPlugin plugin, @NotNull String filePath, @NotNull String sectionPath) {
+    protected SectionParser(@NotNull AnvilPlugin plugin, @NotNull File file, @NotNull String sectionPath) {
         this.plugin = plugin;
-        this.filePath = filePath;
+        this.file = file;
         this.sectionPath = sectionPath;
     }
 
-    public SectionParser(AnvilPlugin plugin, @NotNull String sectionPath) {
-        this(plugin, "config.yml", sectionPath);
+    protected SectionParser(@NotNull AnvilPlugin plugin) {
+        this(plugin, new File(plugin.getDataFolder(), "config.yml"), "");
     }
 
-    public SectionParser(AnvilPlugin plugin) {
-        this(plugin, "config.yml", "");
-    }
+    public abstract T parse();
 
-    public abstract void parse();
-
-    public ConfigurationSection getSection() {
+    public @Nullable ConfigurationSection getSection() {
         if (section == null) {
-            this.section = getConfig();
+            if (file.getName().equals("config.yml")) {
+                section = plugin.getConfig();
+            } else {
+                section = YamlConfiguration.loadConfiguration(new PluginResourceLoader().loadFile(plugin, file));
+            }
 
-            if (!sectionPath.isEmpty())
-                this.section = section.getConfigurationSection(sectionPath);
+            if (!sectionPath.isEmpty()) {
+                ConfigurationSection sectionPathConfig = section.getConfigurationSection(sectionPath);
+                if (sectionPathConfig == null) {
+                    getPlugin().getLogger().warning("Could not find section " + getSectionPath() + " in " + getFile());
+                    return null;
+                }
+                section = sectionPathConfig;
+            }
         }
 
         return section;
-    }
-
-    public ConfigurationSection getConfig() {
-        return "config.yml".equals(filePath) ? plugin.getConfig() : YamlConfiguration.loadConfiguration(FileUtils.loadFile(plugin, filePath));
     }
 
 }

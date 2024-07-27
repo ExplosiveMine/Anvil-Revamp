@@ -29,13 +29,14 @@ public final class UpdateChecker {
                 Scanner scanner = new Scanner(inputStream);
                 if (scanner.hasNext()) {
                     String s = scanner.next();
-                    if (s.replaceAll("v", "").compareTo(plugin.getDescription().getVersion()) > 0)
+                    if (s.replace("v", "").compareTo(plugin.getDescription().getVersion()) > 0)
                         action.accept(s);
                 } else {
-                    Logging.debug(plugin, "Could not check plugin's version!");
+                    plugin.getLogger().fine("Could not check plugin's version!");
                 }
             } catch (IOException exception) {
-                exception.printStackTrace();
+                plugin.getLogger().warning("MalformedURLException by url provided in UpdateChecker. " +
+                        "Please inform the developer.");
             }
         });
     }

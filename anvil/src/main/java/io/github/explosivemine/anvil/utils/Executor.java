@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class Executor {
+    private Executor () {}
     public static void async(AnvilPlugin plugin, Consumer<BukkitRunnable> consumer, long...args) {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override

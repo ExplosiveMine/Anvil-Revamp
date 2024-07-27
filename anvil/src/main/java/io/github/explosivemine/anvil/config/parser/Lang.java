@@ -1,81 +1,100 @@
 package io.github.explosivemine.anvil.config.parser;
 
 import io.github.explosivemine.anvil.AnvilPlugin;
-import io.github.explosivemine.anvil.utils.StringUtils;
-import io.github.explosivemine.anvil.player.SPlayer;
-import io.github.explosivemine.anvil.utils.Logging;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public enum Lang {
-    NO_PERMISSION,
-    ON_CONSOLE_EXECUTE,
+    COMMAND_COOLDOWN,
+    COMMAND_USAGE,
+    CONSOLE_NO_PERM,
+    HELP_ANVIL_COMMAND_DESCRIPTION,
+    HELP_FOOTER,
+    HELP_HEADER,
+    HELP_LINE,
+    HELP_NEXT_PAGE,
+    INVALID_NUMBER,
+    INVALID_PLAYER,
+    PLAYER_NO_PERM,
     RELOAD_MESSAGES,
     TITLE,
     TOO_EXPENSIVE,
     CUSTOM {
         @Override
-        public void send(CommandSender sender, Object... objects) {
-            if (objects.length > 0)
-                sender.sendMessage(StringUtils.replaceArgs("{0}", objects));
+        public void send(@NotNull CommandSender sender, @NotNull Object... arguments) {
+            sender.sendMessage(get(arguments));
         }
 
         @Override
-        public String get(Object... objects) {
-            return StringUtils.colour(StringUtils.replaceArgs("{0}", objects));
+        public @NotNull String get(@NotNull Object... arguments) {
+            if (arguments.length == 1) {
+                return new Message(String.valueOf(arguments[0])).getMessage();
+            } else if (arguments.length > 1) {
+                return new Message(String.valueOf(arguments[0])).getMessage(Arrays.copyOfRange(arguments, 1, arguments.length));
+            }
+            return "";
         }
+
     };
 
-    private static YamlConfiguration langCfg;
+    private static final Map<Lang, Message> messages = new EnumMap<>(Lang.class);
 
-    private static final Map<Lang, Message> messages = new HashMap<>();
-
-    public static void reload(AnvilPlugin plugin) {
-        Logging.info("Reloading messages...");
+    public static void reload(@NotNull AnvilPlugin plugin) {
+        Logger logger = plugin.getLogger();
+        logger.info("Reloading messages...");
         long startTime = System.currentTimeMillis();
 
         File langFile = new File(plugin.getDataFolder(), "lang.yml");
         if (!langFile.exists())
             plugin.saveResource("lang.yml", false);
 
-        langCfg = YamlConfiguration.loadConfiguration(langFile);
+        YamlConfiguration langCfg = YamlConfiguration.loadConfiguration(langFile);
 
         Arrays.stream(values()).forEach(lang -> messages.put(lang, new Message(langCfg.getString(lang.name(), "{0}"))));
 
-        Logging.info(StringUtils.replaceArgs("Messages have been reloaded. This took {0} ms.", (System.currentTimeMillis()-startTime)));
+        logger.log(Level.INFO, "Messages have been reloaded. This took {0} ms.",
+                (System.currentTimeMillis() - startTime));
     }
 
-    public void send(CommandSender sender, Object... objects) {
-        messages.get(this).send(sender, objects);
+    public void send(@NotNull CommandSender sender, @NotNull Object... arguments) {
+        sender.sendMessage(messages.get(this).getMessage(arguments));
     }
 
-    public void send(SPlayer sPlayer, Object... objects) {
-        sPlayer.runIfOnline(player -> send(player, objects));
+    public String get(@NotNull Object... arguments) {
+        return messages.get(this).getMessage(arguments);
     }
 
-    public String get(Object... objects) {
-        return StringUtils.colour(StringUtils.replaceArgs(messages.get(this).getMessage(), objects));
+    public static @NotNull String colour(@NotNull String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
+    }
+
+    public static @NotNull String replaceArgs(@NotNull String msg, @NotNull Object... arguments) {
+        for (int i = 0; i < arguments.length; i++) {
+            String objectString = arguments[i].toString();
+            msg = msg.replace("{" + i + "}", objectString);
+        }
+
+        return msg;
     }
 
     private static final class Message {
-        private final String message;
+        private final String string;
 
-        Message(String message) {
-            this.message = message;
+        Message(@NotNull String message) {
+            this.string = message;
         }
 
-        String getMessage() {
-            return message;
-        }
-
-        void send(CommandSender sender, Object... objects) {
-            if (message != null && !message.isEmpty())
-                sender.sendMessage(StringUtils.colour(StringUtils.replaceArgs(message, objects)));
+        @NotNull String getMessage(@NotNull Object... arguments) {
+            return colour(replaceArgs(string, arguments));
         }
     }
 

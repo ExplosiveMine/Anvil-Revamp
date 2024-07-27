@@ -13,7 +13,6 @@ import org.bukkit.inventory.Inventory;
 public class Wrapper1_20_R2 implements VersionWrapper {
     @Override
     public Inventory openInventory(Player player) {
-
         Block block = Blocks.ANVIL;
         ServerPlayer serverPlayer = getServerPlayer(player);
         Location loc = player.getLocation();

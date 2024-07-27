@@ -28,16 +28,17 @@ public final class AnvilEvents extends EventListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
-        Menu menu = plugin.getMenuManager().getMenu(event.getView().getPlayer());
+        Menu menu = getPlugin().getMenuManager().getMenu(event.getView().getPlayer());
         if (menu == null)
             return;
 
-        Set<UUID> instaBuild = plugin.getMenuManager().getInstaBuild();
+        Set<UUID> instaBuild = getPlugin().getMenuManager().getInstaBuild();
 
         Player player = (Player) event.getView().getPlayer();
         UUID uuid = player.getUniqueId();
-        if (instaBuild.contains(uuid) && !player.getGameMode().equals(GameMode.CREATIVE))
+        if (instaBuild.contains(uuid) && !player.getGameMode().equals(GameMode.CREATIVE)) {
             new VersionMatcher().match().setInstaBuild(player, false);
+        }
 
         AnvilInventory inv = event.getInventory();
         boolean slot1HasItem = isItemPresent(inv, 1);
@@ -45,8 +46,8 @@ public final class AnvilEvents extends EventListener {
                 && !inv.getItem(0).getItemMeta().getDisplayName().equals(inv.getRenameText());
 
         // handle renaming costs
-        if (plugin.getConfigSettings().getConfigParser().isChangeRenameCost() && onlyRename) {
-            inv.setRepairCost(plugin.getConfigSettings().getConfigParser().getRenameCost());
+        if (getPlugin().getConfigSettings().getConfigParser().isChangeRenameCost() && onlyRename) {
+            inv.setRepairCost(getPlugin().getConfigSettings().getConfigParser().getRenameCost());
         } else if (!onlyRename) {
             // handle max repair costs
             int cost = inv.getRepairCost();
@@ -77,10 +78,10 @@ public final class AnvilEvents extends EventListener {
         if (result == null || !result.hasItemMeta() || text == null)
             return;
 
-        if (plugin.getConfigSettings().getConfigParser().isColours() && event.getView().getPlayer().hasPermission("anvil.colour"))
+        if (getPlugin().getConfigSettings().getConfigParser().isColours() && event.getView().getPlayer().hasPermission("anvil.colour"))
             event.setResult(new ItemBuilder(result)
-                .setDisplayName(text)
-                .toItem());
+                .setDisplayName(Lang.colour(text))
+                .getItem());
     }
 
     // the AnvilPrepareEvent is called multiple times, so we have to limit the number of messages sent

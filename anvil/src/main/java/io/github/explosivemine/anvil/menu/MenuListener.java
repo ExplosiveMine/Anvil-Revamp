@@ -4,7 +4,6 @@ import io.github.explosivemine.anvil.AnvilPlugin;
 import io.github.explosivemine.anvil.menu.type.Menu;
 import io.github.explosivemine.anvil.menu.type.anvil.VersionMatcher;
 import io.github.explosivemine.anvil.player.SPlayer;
-import io.github.explosivemine.anvil.utils.Logging;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,7 +23,7 @@ public final class MenuListener implements Listener {
         InventoryHolder holder = event.getInventory().getHolder();
         SPlayer sPlayer = plugin.getSPlayerManager().get(event.getWhoClicked().getUniqueId());
 
-        Menu menu = holder instanceof Menu ? (Menu) holder : plugin.getMenuManager().getMenu(event.getWhoClicked());
+        Menu menu = holder instanceof Menu tempMenu ? tempMenu : plugin.getMenuManager().getMenu(event.getWhoClicked());
         if (menu == null)
             return;
 
