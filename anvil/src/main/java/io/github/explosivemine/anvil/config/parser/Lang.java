@@ -26,7 +26,6 @@ public enum Lang {
     INVALID_PLAYER,
     PLAYER_NO_PERM,
     RELOAD_MESSAGES,
-    TITLE,
     TOO_EXPENSIVE,
     CUSTOM {
         @Override

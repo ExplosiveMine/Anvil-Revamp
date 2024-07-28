@@ -16,6 +16,8 @@ public final class ConfigParser extends SectionParser<Void> {
     private boolean virtual;
     private boolean debug;
 
+    private String anvilTitle;
+
     public ConfigParser(AnvilPlugin plugin) {
         super(plugin);
     }
@@ -41,6 +43,8 @@ public final class ConfigParser extends SectionParser<Void> {
 
         renameCost = config.getInt("renaming cost", -1);
         changeRenameCost = renameCost != -1;
+
+        anvilTitle = config.getString("anvil title", "Repair & Name");
 
         debug = config.getBoolean("debug", false);
         return null;

@@ -7,7 +7,7 @@ import io.github.explosivemine.anvil.menu.type.anvil.AnvilMenu;
 
 public final class Anvil extends AnvilMenu {
     public Anvil(AnvilPlugin plugin) {
-        super(plugin, MenuIdentifier.ANVIL, Lang.TITLE.get());
+        super(plugin, MenuIdentifier.ANVIL, Lang.colour(plugin.getConfigSettings().getConfigParser().getAnvilTitle()));
     }
 
 }
