@@ -19,7 +19,7 @@ public abstract class AnvilMenu extends Menu {
 
     @Override
     protected Inventory createInv(SPlayer sPlayer, InventoryHolder inventoryHolder) {
-        return new VersionMatcher().match().openInventory(sPlayer.toOfflinePlayer().getPlayer());
+        return new VersionMatcher().match().openInventory(sPlayer.toOfflinePlayer().getPlayer(), getTitle(sPlayer));
     }
 
     @Override

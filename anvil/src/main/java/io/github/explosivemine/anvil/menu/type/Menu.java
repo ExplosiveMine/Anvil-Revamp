@@ -16,26 +16,34 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 public abstract class Menu implements InventoryHolder {
-    @Getter private final AnvilPlugin plugin;
+    @Getter
+    private final AnvilPlugin plugin;
 
-    @Getter private final MenuIdentifier identifier;
+    @Getter
+    private final MenuIdentifier identifier;
 
-    @Getter private final String title;
-    @Getter @Setter private Function<SPlayer, String> titleProvider;
+    private final String title;
+    @Getter @Setter
+    private Function<SPlayer, String> titleProvider;
 
-    @Getter private final InventoryType type;
+    @Getter
+    private final InventoryType type;
 
-    @Getter private final int size;
+    @Getter
+    private final int size;
 
-    @Getter @Setter private MenuAction<InventoryCloseEvent> closeAction;
+    @Getter @Setter
+    private MenuAction<InventoryCloseEvent> closeAction;
 
-    @Getter @Setter private BaseItemBuilder<?> filler;
+    @Getter @Setter
+    private BaseItemBuilder<?> filler;
 
     private final Map<Integer, MenuItem> defaultItems = new HashMap<>();
     private boolean setup = false;
@@ -100,9 +108,19 @@ public abstract class Menu implements InventoryHolder {
     }
 
     protected Inventory createInv(SPlayer sPlayer, InventoryHolder inventoryHolder) {
-        String menuTitle = sPlayer == null || titleProvider == null ? getTitle() : titleProvider.apply(sPlayer);
+        String menuTitle = getTitle(sPlayer);
         return InventoryType.CHEST.equals(type) ? Bukkit.createInventory(inventoryHolder, size, menuTitle) :
                 Bukkit.createInventory(inventoryHolder, type, menuTitle);
+    }
+
+    /**
+     *
+     * @param sPlayer the player to be passed to the titleProvider. If set to null, it just returns the default
+     *                title
+     * @return the title of the menu
+     */
+    public String getTitle(@Nullable SPlayer sPlayer) {
+        return sPlayer == null || titleProvider == null ? title : titleProvider.apply(sPlayer);
     }
 
     public void onClose(InventoryCloseEvent event, SPlayer sPlayer) {

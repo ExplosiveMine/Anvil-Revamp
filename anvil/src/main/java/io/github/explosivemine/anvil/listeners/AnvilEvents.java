@@ -5,6 +5,7 @@ import io.github.explosivemine.anvil.config.parser.Lang;
 import io.github.explosivemine.anvil.menu.items.builders.ItemBuilder;
 import io.github.explosivemine.anvil.menu.type.Menu;
 import io.github.explosivemine.anvil.menu.type.anvil.VersionMatcher;
+import io.github.explosivemine.anvil.version.VersionWrapper;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,8 +37,10 @@ public final class AnvilEvents extends EventListener {
 
         Player player = (Player) event.getView().getPlayer();
         UUID uuid = player.getUniqueId();
+
+        VersionWrapper versionWrapper = new VersionMatcher().match();
         if (instaBuild.contains(uuid) && !player.getGameMode().equals(GameMode.CREATIVE)) {
-            new VersionMatcher().match().setInstaBuild(player, false);
+            versionWrapper.setInstaBuild(player, false);
         }
 
         AnvilInventory inv = event.getInventory();
@@ -50,7 +53,7 @@ public final class AnvilEvents extends EventListener {
             inv.setRepairCost(getPlugin().getConfigSettings().getConfigParser().getRenameCost());
         } else if (!onlyRename) {
             // handle max repair costs
-            int cost = inv.getRepairCost();
+            int cost = versionWrapper.getRepairCost(event);
             if (cost < maxCost) {
                 // leave it as too expensive and send the player a message about what the repair cost would have been
                 if (cost > player.getLevel() && player.getGameMode() != GameMode.CREATIVE) {
