@@ -13,7 +13,7 @@ renaming cost: 1
 # Right-clicking an anvil in the main hand opens the anvil gui - permission: anvil.virtual
 virtual anvils: true
 
-# the title of the anvil inventory
+# the title of the anvil inventory - 1.19.4+
 anvil title: "Repair & Name"
 
 debug: false
