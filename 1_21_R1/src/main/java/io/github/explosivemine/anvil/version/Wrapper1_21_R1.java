@@ -37,6 +37,17 @@ public final class Wrapper1_21_R1 implements VersionWrapper {
 
     @Override
     public int getRepairCost(PrepareAnvilEvent prepareAnvilEvent) {
-        return prepareAnvilEvent.getView().getRepairCost();
+        /*
+         * For some reason spigot returns 0 using the method in the catch clause.
+         * Spigot NEEDS us to use the AnvilView class to get the repair cost.
+         * This class doesn't exist yet in Paper, and maybe some other server software.
+         * So we check for spigot by getting the AnvilView class.
+         */
+        try {
+            Class<?> clazz = Class.forName("org.bukkit.inventory.view.AnvilView");
+            return prepareAnvilEvent.getView().getRepairCost();
+        } catch (ClassNotFoundException e) {
+            return prepareAnvilEvent.getInventory().getRepairCost();
+        }
     }
 }
