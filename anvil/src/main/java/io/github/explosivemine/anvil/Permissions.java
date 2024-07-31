@@ -13,7 +13,10 @@ public enum Permissions {
     ADMIN("anvil.admin"),
     VIRTUAL("anvil.virtual"),
     UNBREAKABLE("anvil.unbreakable"),
-    BYPASS_COOLDOWN("anvil.bypass.cooldown");
+    BYPASS_COOLDOWN("anvil.bypass.cooldown"),
+    // to account for typos, we have both ways of spelling colour
+    COLOUR("anvil.colour"),
+    COLOR("anvil.color");
 
     private final @NotNull String node;
 

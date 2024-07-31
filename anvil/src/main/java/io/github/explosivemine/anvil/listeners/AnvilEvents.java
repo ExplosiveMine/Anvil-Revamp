@@ -1,6 +1,7 @@
 package io.github.explosivemine.anvil.listeners;
 
 import io.github.explosivemine.anvil.AnvilPlugin;
+import io.github.explosivemine.anvil.Permissions;
 import io.github.explosivemine.anvil.config.parser.Lang;
 import io.github.explosivemine.anvil.menu.items.builders.ItemBuilder;
 import io.github.explosivemine.anvil.menu.type.Menu;
@@ -18,7 +19,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public final class AnvilEvents extends EventListener {
-    // prepare anvil event cooldown
+    // PrepareAnvilEvent cooldown
     private final HashMap<UUID, Long> players = new HashMap<>();
     private final int maxCost;
 
@@ -81,10 +82,14 @@ public final class AnvilEvents extends EventListener {
         if (result == null || !result.hasItemMeta() || text == null)
             return;
 
-        if (getPlugin().getConfigSettings().getConfigParser().isColours() && event.getView().getPlayer().hasPermission("anvil.colour"))
+
+        if (getPlugin().getConfigSettings().getConfigParser().isColours()
+                && (Permissions.COLOUR.hasPermission(event.getView().getPlayer())
+                || Permissions.COLOR.hasPermission(event.getView().getPlayer()))) {
             event.setResult(new ItemBuilder(result)
-                .setDisplayName(Lang.colour(text))
-                .getItem());
+                    .setDisplayName(Lang.colour(text))
+                    .getItem());
+        }
     }
 
     // the AnvilPrepareEvent is called multiple times, so we have to limit the number of messages sent
