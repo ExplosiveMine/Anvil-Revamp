@@ -25,7 +25,7 @@ public final class AnvilEvents extends EventListener {
 
     public AnvilEvents(AnvilPlugin plugin) {
         super(plugin);
-        maxCost = plugin.getConfigSettings().getConfigParser().getCostLimit();
+        maxCost = plugin.getConfigParser().getCostLimit();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -50,16 +50,17 @@ public final class AnvilEvents extends EventListener {
                 && !inv.getItem(0).getItemMeta().getDisplayName().equals(inv.getRenameText());
 
         // handle renaming costs
-        if (getPlugin().getConfigSettings().getConfigParser().isChangeRenameCost() && onlyRename) {
-            inv.setRepairCost(getPlugin().getConfigSettings().getConfigParser().getRenameCost());
+        if (getPlugin().getConfigParser().isChangeRenameCost() && onlyRename) {
+            inv.setRepairCost(getPlugin().getConfigParser().getRenameCost());
         } else if (!onlyRename) {
             // handle max repair costs
             int cost = versionWrapper.getRepairCost(event);
             if (cost < maxCost) {
                 // leave it as too expensive and send the player a message about what the repair cost would have been
                 if (cost > player.getLevel() && player.getGameMode() != GameMode.CREATIVE) {
-                    if (slot1HasItem && shouldSendMessage(player.getUniqueId()))
+                    if (slot1HasItem && shouldSendMessage(player.getUniqueId())) {
                         Lang.TOO_EXPENSIVE.send(player, cost);
+                    }
                     return;
                 }
 
@@ -83,7 +84,7 @@ public final class AnvilEvents extends EventListener {
             return;
 
 
-        if (getPlugin().getConfigSettings().getConfigParser().isColours()
+        if (getPlugin().getConfigParser().isColours()
                 && (Permissions.COLOUR.hasPermission(event.getView().getPlayer())
                 || Permissions.COLOR.hasPermission(event.getView().getPlayer()))) {
             event.setResult(new ItemBuilder(result)

@@ -55,19 +55,4 @@ public final class SPlayer {
         runIfOnline(player -> player.openInventory(inventory));
     }
 
-    public void closeInventory() {
-        runIfOnline(HumanEntity::closeInventory);
-    }
-
-    public void playSound(Sound sound) {
-        runIfOnline(player -> player.playSound(player.getLocation(), sound, 0.5f, 0.5f));
-    }
-
-    public Location getLocation() {
-        if (isOffline())
-            return toOfflinePlayer().getBedSpawnLocation();
-
-        return toPlayer().getLocation();
-    }
-
 }

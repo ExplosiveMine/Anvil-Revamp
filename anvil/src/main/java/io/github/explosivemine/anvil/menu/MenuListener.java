@@ -38,8 +38,9 @@ public final class MenuListener implements Listener {
             plugin.getMenuManager().getInstaBuild().remove(player.getUniqueId());
         }
 
-        if (!(event.getInventory().getHolder() instanceof Menu menu))
+        if (!(event.getInventory().getHolder() instanceof Menu menu)) {
             return;
+        }
 
         SPlayer sPlayer = plugin.getSPlayerManager().get(event.getPlayer().getUniqueId());
         menu.onClose(event, sPlayer);

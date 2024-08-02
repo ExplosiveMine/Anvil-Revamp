@@ -67,4 +67,8 @@ public final class AnvilPlugin extends JavaPlugin {
         }));
     }
 
+    public ConfigParser getConfigParser() {
+        return configSettings.getConfigParser();
+    }
+
 }
