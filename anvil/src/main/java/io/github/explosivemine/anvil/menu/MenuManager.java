@@ -5,6 +5,7 @@ import io.github.explosivemine.anvil.menu.impl.Anvil;
 import io.github.explosivemine.anvil.menu.type.Menu;
 import io.github.explosivemine.anvil.player.SPlayer;
 import lombok.Getter;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +61,11 @@ public final class MenuManager {
         return menus.get(identifier);
     }
 
-    public void close(InventoryHolder inventoryHolder) {
+    public void close(Player player) {
+        player.closeInventory();
+    }
+
+    public void onClose(InventoryHolder inventoryHolder) {
         entityMenus.remove(inventoryHolder);
     }
 

@@ -1,29 +1,25 @@
 package io.github.explosivemine.anvil.menu;
 
 import io.github.explosivemine.anvil.AnvilPlugin;
+import io.github.explosivemine.anvil.listeners.EventListener;
 import io.github.explosivemine.anvil.menu.type.Menu;
 import io.github.explosivemine.anvil.menu.type.anvil.VersionMatcher;
 import io.github.explosivemine.anvil.player.SPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.InventoryHolder;
 
-public final class MenuListener implements Listener {
-    private final AnvilPlugin plugin;
+public final class MenuListener extends EventListener {
 
     public MenuListener(AnvilPlugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
-        SPlayer sPlayer = plugin.getSPlayerManager().get(event.getWhoClicked().getUniqueId());
-
-        Menu menu = holder instanceof Menu tempMenu ? tempMenu : plugin.getMenuManager().getMenu(event.getWhoClicked());
+        SPlayer sPlayer = getPlugin().getSPlayerManager().get(event.getWhoClicked().getUniqueId());
+        Menu menu = getPlugin().getMenuManager().getMenu(event.getWhoClicked());
         if (menu == null)
             return;
 
@@ -35,14 +31,15 @@ public final class MenuListener implements Listener {
         if (!event.getPlayer().getGameMode().equals(GameMode.CREATIVE) && event.getInventory().getType().equals(InventoryType.ANVIL)) {
             Player player = (Player) event.getPlayer();
             new VersionMatcher().match().setInstaBuild(player, false);
-            plugin.getMenuManager().getInstaBuild().remove(player.getUniqueId());
+            getPlugin().getMenuManager().getInstaBuild().remove(player.getUniqueId());
         }
 
-        if (!(event.getInventory().getHolder() instanceof Menu menu)) {
+        Menu menu = getPlugin().getMenuManager().getMenu(event.getPlayer());
+        if (menu == null) {
             return;
         }
 
-        SPlayer sPlayer = plugin.getSPlayerManager().get(event.getPlayer().getUniqueId());
+        SPlayer sPlayer = getPlugin().getSPlayerManager().get(event.getPlayer().getUniqueId());
         menu.onClose(event, sPlayer);
     }
 

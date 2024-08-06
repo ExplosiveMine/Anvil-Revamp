@@ -2,10 +2,9 @@ package io.github.explosivemine.anvil.player;
 
 import io.github.explosivemine.anvil.AnvilPlugin;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -15,7 +14,11 @@ import java.util.function.Consumer;
 public final class SPlayer {
     private final AnvilPlugin plugin;
 
-    @Getter private final UUID uuid;
+    @Getter
+    private final UUID uuid;
+
+    @Getter @Setter
+    private Location openedAnvilLocation;
 
     public SPlayer(AnvilPlugin plugin, UUID uuid) {
         this.plugin = plugin;

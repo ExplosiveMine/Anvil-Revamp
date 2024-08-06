@@ -39,7 +39,7 @@ public abstract class Menu implements InventoryHolder {
     @Getter
     private final int size;
 
-    @Getter @Setter
+    @Getter
     private MenuAction<InventoryCloseEvent> closeAction;
 
     @Getter @Setter
@@ -126,13 +126,14 @@ public abstract class Menu implements InventoryHolder {
     public void onClose(InventoryCloseEvent event, SPlayer sPlayer) {
         boolean reopenInventory = false;
 
-        if (closeAction != null)
+        if (closeAction != null) {
             reopenInventory = closeAction.apply(event);
+        }
 
-        if (reopenInventory)
+        if (reopenInventory) {
             Executor.sync(plugin, runnable -> sPlayer.openInventory(event.getInventory()), 1L);
-        else
-            plugin.getMenuManager().close(getHolder(sPlayer));
+        } else
+            plugin.getMenuManager().onClose(getHolder(sPlayer));
     }
 
     public abstract InventoryHolder getHolder(SPlayer sPlayer);
@@ -152,4 +153,7 @@ public abstract class Menu implements InventoryHolder {
         sPlayer.runIfOnline(player -> populate(player.getOpenInventory().getTopInventory(), sPlayer));
     }
 
+    public void setCloseAction(Function<InventoryCloseEvent, Boolean> closeAction) {
+        this.closeAction = new MenuAction<>(closeAction);
+    }
 }

@@ -1,12 +1,13 @@
 package io.github.explosivemine.anvil.menu.type.anvil;
 
 import io.github.explosivemine.anvil.AnvilPlugin;
+import io.github.explosivemine.anvil.api.events.AnvilUseEvent;
 import io.github.explosivemine.anvil.menu.MenuIdentifier;
 import io.github.explosivemine.anvil.menu.items.builders.ItemBuilder;
 import io.github.explosivemine.anvil.menu.type.Menu;
 import io.github.explosivemine.anvil.player.SPlayer;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
@@ -15,6 +16,10 @@ import org.bukkit.inventory.InventoryHolder;
 public abstract class AnvilMenu extends Menu {
     protected AnvilMenu(AnvilPlugin plugin, MenuIdentifier identifier, String title) {
         super(plugin, identifier, title, InventoryType.ANVIL);
+        setCloseAction(inventoryCloseEvent -> {
+            plugin.getAnvilManager().onAnvilClose(((Player) inventoryCloseEvent.getPlayer()));
+            return false;
+        });
     }
 
     @Override
@@ -24,23 +29,15 @@ public abstract class AnvilMenu extends Menu {
 
     @Override
     public void create() {
-        setItem(2, new ItemBuilder(Material.AIR)
-                .setAction((event, sPlayer) -> {
-                    if (!(event.getClickedInventory() instanceof AnvilInventory inv))
-                        return;
+        setItem(2, new ItemBuilder(Material.AIR).setAction((event, sPlayer) -> {
+            if (!(event.getClickedInventory() instanceof AnvilInventory)) {
+                return;
+            }
 
-                    if (getPlugin().getMenuManager().getInstaBuild().contains(sPlayer.getUuid())) {
-                        sPlayer.runIfOnline(player -> {
-                            if (player.getGameMode() == GameMode.CREATIVE)
-                                return;
-
-                            if (player.getLevel() >= inv.getRepairCost())
-                                player.setLevel(player.getLevel() - inv.getRepairCost());
-                            else
-                                event.setCancelled(true);
-                        });
-                    }
-                }));
+            AnvilUseEvent anvilUseEvent = new AnvilUseEvent(event.getView(), 2);
+            getPlugin().getServer().getPluginManager().callEvent(anvilUseEvent);
+            event.setCancelled(anvilUseEvent.isCancelled());
+        }));
     }
 
     @Override

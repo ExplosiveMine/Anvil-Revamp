@@ -2,6 +2,8 @@ package io.github.explosivemine.anvil;
 
 import io.github.explosivemine.anvil.commands.anvil.AnvilPluginCommand;
 import io.github.explosivemine.anvil.commands.anvil.AnvilCommandsMap;
+import io.github.explosivemine.anvil.config.parser.ConfigParser;
+import io.github.explosivemine.anvil.listeners.BlockEvents;
 import io.github.explosivemine.anvil.listeners.ServerEvents;
 import io.github.explosivemine.anvil.menu.MenuManager;
 import io.github.explosivemine.anvil.player.SPlayerManager;
@@ -25,6 +27,8 @@ public final class AnvilPlugin extends JavaPlugin {
 
     private final AnvilPluginCommand anvilCommand = new AnvilPluginCommand(this, new AnvilCommandsMap(this));
 
+    private final AnvilManager anvilManager = new AnvilManager(this);
+
     @Override
     public void onEnable() {
         configSettings.init();
@@ -42,6 +46,7 @@ public final class AnvilPlugin extends JavaPlugin {
         new PlayerEvents(this);
         new AnvilEvents(this);
         new ServerEvents(this);
+        new BlockEvents(this);
 
         Metrics metrics = new Metrics(this, 11598);
         metrics.addCustomChart(new SimplePie("unbreakable_anvils", () -> {

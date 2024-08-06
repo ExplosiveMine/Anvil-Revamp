@@ -2,10 +2,12 @@ package io.github.explosivemine.anvil.listeners;
 
 import io.github.explosivemine.anvil.AnvilPlugin;
 import io.github.explosivemine.anvil.Permissions;
+import io.github.explosivemine.anvil.api.events.AnvilUseEvent;
 import io.github.explosivemine.anvil.config.parser.Lang;
 import io.github.explosivemine.anvil.menu.items.builders.ItemBuilder;
 import io.github.explosivemine.anvil.menu.type.Menu;
 import io.github.explosivemine.anvil.menu.type.anvil.VersionMatcher;
+import io.github.explosivemine.anvil.player.SPlayer;
 import io.github.explosivemine.anvil.version.VersionWrapper;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -104,6 +106,30 @@ public final class AnvilEvents extends EventListener {
 
     private boolean isItemPresent(AnvilInventory inv, int slot) {
         return (inv.getItem(slot) != null && !inv.getItem(slot).getType().isAir());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onAnvilUse(AnvilUseEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+
+        SPlayer sPlayer = getPlugin().getSPlayerManager().get(player);
+        if (getPlugin().getMenuManager().getInstaBuild().contains(sPlayer.getUuid())) {
+            sPlayer.runIfOnline(p -> {
+                if (p.getGameMode() == GameMode.CREATIVE) {
+                    return;
+                }
+
+                if (p.getLevel() >= event.getAnvilInventory().getRepairCost()) {
+                    p.setLevel(p.getLevel() - event.getAnvilInventory().getRepairCost());
+                } else {
+                    event.setCancelled(true);
+                }
+            });
+        }
+
+        getPlugin().getAnvilManager().onAnvilUse(player);
     }
 
 }
