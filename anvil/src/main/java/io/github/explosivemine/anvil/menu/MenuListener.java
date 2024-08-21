@@ -20,8 +20,9 @@ public final class MenuListener extends EventListener {
     public void onClick(InventoryClickEvent event) {
         SPlayer sPlayer = getPlugin().getSPlayerManager().get(event.getWhoClicked().getUniqueId());
         Menu menu = getPlugin().getMenuManager().getMenu(event.getWhoClicked());
-        if (menu == null)
+        if (menu == null) {
             return;
+        }
 
         menu.clickItem(sPlayer, event);
     }

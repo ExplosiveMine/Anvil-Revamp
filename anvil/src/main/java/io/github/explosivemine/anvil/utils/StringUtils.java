@@ -6,10 +6,6 @@ import java.util.concurrent.TimeUnit;
 public final class StringUtils {
     private StringUtils() {}
 
-    //---------------------------------------------------------------------------------------------------------------//
-    //                                           STRING FORMATTING METHODS                                           //
-    //---------------------------------------------------------------------------------------------------------------//
-
     public static String formatTime(Duration duration) {
         return formatTimeRecursive(new StringBuilder(), duration, TimeUnit.DAYS.ordinal(), false);
     }

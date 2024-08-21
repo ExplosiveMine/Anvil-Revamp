@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class AnvilManager {
+public final class AnvilManager {
     private final AnvilPlugin plugin;
 
     private final Map<Location, Set<SPlayer>> openedAnvilLocations = new HashMap<>();
