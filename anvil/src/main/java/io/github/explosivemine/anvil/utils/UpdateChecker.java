@@ -29,8 +29,9 @@ public final class UpdateChecker {
                 Scanner scanner = new Scanner(inputStream);
                 if (scanner.hasNext()) {
                     String s = scanner.next();
-                    if (s.replace("v", "").compareTo(plugin.getDescription().getVersion()) > 0)
+                    if (s.replace("v", "").compareTo(plugin.getDescription().getVersion()) != 0) {
                         action.accept(s);
+                    }
                 } else {
                     plugin.getLogger().fine("Could not check plugin's version!");
                 }
