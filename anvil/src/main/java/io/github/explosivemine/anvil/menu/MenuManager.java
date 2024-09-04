@@ -19,7 +19,8 @@ public final class MenuManager {
     private final Map<InventoryHolder, MenuIdentifier> entityMenus = new HashMap<>();
 
     // players which have instaBuild enabled
-    @Getter private final Set<UUID> instaBuild = new HashSet<>();
+    @Getter
+    private final Set<UUID> instaBuild = new HashSet<>();
 
     public MenuManager(AnvilPlugin plugin) {
         this.plugin = plugin;

@@ -3,13 +3,10 @@ package io.github.explosivemine.anvil;
 import io.github.explosivemine.anvil.commands.anvil.AnvilPluginCommand;
 import io.github.explosivemine.anvil.commands.anvil.AnvilCommandsMap;
 import io.github.explosivemine.anvil.config.parser.ConfigParser;
-import io.github.explosivemine.anvil.listeners.BlockEvents;
-import io.github.explosivemine.anvil.listeners.ServerEvents;
+import io.github.explosivemine.anvil.listeners.*;
 import io.github.explosivemine.anvil.menu.MenuManager;
 import io.github.explosivemine.anvil.player.SPlayerManager;
 import io.github.explosivemine.anvil.config.ConfigSettings;
-import io.github.explosivemine.anvil.listeners.AnvilEvents;
-import io.github.explosivemine.anvil.listeners.PlayerEvents;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -43,10 +40,16 @@ public final class AnvilPlugin extends JavaPlugin {
         }
         anvilCommand.getCommandsMap().loadDefaultCommands();
 
-        new PlayerEvents(this);
-        new AnvilEvents(this);
-        new ServerEvents(this);
-        new BlockEvents(this);
+        EventListener[] listeners = new EventListener[] {
+                new PlayerEvents(this),
+                new AnvilEvents(this),
+                new ServerEvents(this),
+                new BlockEvents(this)
+        };
+
+        for (EventListener listener : listeners) {
+            getServer().getPluginManager().registerEvents(listener, this);
+        }
 
         Metrics metrics = new Metrics(this, 11598);
         metrics.addCustomChart(new SimplePie("unbreakable_anvils", () -> {

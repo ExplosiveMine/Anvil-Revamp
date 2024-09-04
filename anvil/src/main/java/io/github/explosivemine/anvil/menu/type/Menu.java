@@ -144,8 +144,9 @@ public abstract class Menu implements InventoryHolder {
 
     public void clickItem(SPlayer sPlayer, InventoryClickEvent event) {
         MenuItem item = defaultItems.get(event.getSlot());
-        if (item != null && item.getAction() != null)
+        if (item != null && item.getAction() != null) {
             item.getAction().accept(event, sPlayer);
+        }
     }
 
     // Gets the player's open inventory, and rebuilds it.

@@ -10,7 +10,6 @@ public abstract class EventListener implements Listener {
 
     protected EventListener(AnvilPlugin plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
 }
