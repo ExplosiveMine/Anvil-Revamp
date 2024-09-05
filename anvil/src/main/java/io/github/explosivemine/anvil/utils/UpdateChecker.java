@@ -29,7 +29,7 @@ public final class UpdateChecker {
                 Scanner scanner = new Scanner(inputStream);
                 if (scanner.hasNext()) {
                     String s = scanner.next();
-                    if (s.replace("v", "").compareTo(plugin.getDescription().getVersion()) != 0) {
+                    if (!isPluginUpToDate(s.replace("v", ""), plugin.getDescription().getVersion())) {
                         action.accept(s);
                     }
                 } else {
@@ -41,4 +41,20 @@ public final class UpdateChecker {
             }
         });
     }
+
+    public boolean isPluginUpToDate(String latestVersion, String currentVersion) {
+        String[] latest = latestVersion.split("\\.");
+        String[] current = currentVersion.split("\\.");
+
+        int i = 0;
+        while (i < latest.length && i < current.length) {
+            int comparison = Integer.compare(Integer.parseInt(latest[i]), Integer.parseInt(current[i]));
+            if (comparison != 0) {
+                return comparison < 0;
+            }
+            i++;
+        }
+        return currentVersion.length() >= latestVersion.length();
+    }
+
 }
