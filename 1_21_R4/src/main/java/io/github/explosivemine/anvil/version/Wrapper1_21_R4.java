@@ -6,12 +6,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.Inventory;
 
-public final class Wrapper1_21_R1 implements VersionWrapper {
+public class Wrapper1_21_R4 implements VersionWrapper {
     @Override
     public Inventory openInventory(Player player, String title) {
         Block block = Blocks.ANVIL;
@@ -37,6 +37,6 @@ public final class Wrapper1_21_R1 implements VersionWrapper {
 
     @Override
     public int getRepairCost(PrepareAnvilEvent prepareAnvilEvent) {
-            return prepareAnvilEvent.getView().getRepairCost();
+        return prepareAnvilEvent.getView().getRepairCost();
     }
 }

@@ -7,7 +7,7 @@
     <parent>
         <artifactId>Anvil-Revamp</artifactId>
         <groupId>io.github.explosivemine</groupId>
-        <version>1.4.10</version>
+        <version>1.4.11</version>
     </parent>
 
     <artifactId>1_19_1_R1</artifactId>
@@ -20,14 +20,14 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.19.2-R0.1-SNAPSHOT</version>
+            <version>${spigot.version}</version>
             <classifier>remapped-mojang</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.github.explosivemine</groupId>
             <artifactId>abstraction</artifactId>
-            <version>1.4.10</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

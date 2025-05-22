@@ -26,11 +26,15 @@ public final class VersionMatcher {
         put("1.20.5", "Wrapper1_20_R4");
         put("1.20.6", "Wrapper1_20_R4");
         put("1.21", "Wrapper1_21_R1");
-        put("1.21.1", DEFAULT_WRAPPER);
+        put("1.21.1", "Wrapper1_21_R1");
+        put("1.21.2", "Wrapper1_21_R2");
+        put("1.21.3", "Wrapper1_21_R2");
+        put("1.21.4", "Wrapper1_21_R3");
+        put("1.21.5", DEFAULT_WRAPPER);
     }};
 
     // The default will be the latest version. This must be updated every time a new version is released
-    private final static String DEFAULT_WRAPPER = "Wrapper1_21_R1";
+    private final static String DEFAULT_WRAPPER = "Wrapper1_21_R4";
 
     public VersionWrapper match() {
         String bukkitVersion = Bukkit.getBukkitVersion().split("-")[0];
